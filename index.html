@@ -2,24 +2,34 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Opine</title>
   </head>
-  <body>
-    <h1>Opine</h1>
+  <body class="container">
+    <h1 class="text-center display-3">Opine</h1>
     <main>
-      <article>
-        <a href="discussion_pie.html">Pie is better than cake.</a>
-        <p>Posers can bake a passable cake from a box. Posers can't bake a passable pie. Pie is the no-posers-allowed zone of desserts. Pie keeps it real.</p>
+      <article class="card my-3">
+        <div class="card-header">
+          <a href="discussion_pie.html">Pie is better than cake.</a>
+        </div>
+        <div class="card-body">
+          <p>Posers can bake a passable cake from a box. Posers can't bake a passable pie. Pie is the no-posers-allowed zone of desserts. Pie keeps it real.</p>
+        </div>
       </article>
-      <article>
-        <a href="discussion_will.html">Free will is an illusion.</a>
-        <p>The atoms in our bodies behave according to the laws of physics. If we had a sufficiently powerful supercomputer, it could simulate the future behavior of the atoms that make up our bodies, therefore predicting our every future move.</p>
+      <article class="card my-3">
+        <div class="card-header">
+          <a href="discussion_will.html">Free will is an illusion.</a>
+        </div>
+        <div class="card-body">
+          <p>The atoms in our bodies behave according to the laws of physics. If we had a sufficiently powerful supercomputer, it could simulate the future behavior of the atoms that make up our bodies, therefore predicting our every future move.</p>
+        </div>
       </article>
     </main>
     <form>
-      <input type="text" placeholder="What do you think?">
-      <textarea placeholder="Why?"></textarea>
-      <button type="submit">Submit</button>
+      <input type="text" placeholder="What do you think?" class="form-control my-1">
+      <textarea placeholder="Why?" class="form-control my-1"></textarea>
+      <button type="submit" class="btn btn-primary">Submit</button>
     </form>
   </body>
 </html>
