@@ -8,28 +8,33 @@
   </head>
   <body class="container">
     <h1 class="text-center display-3">Opine</h1>
-    <main>
-      <article class="card my-3">
-        <div class="card-header">
-          <a href="discussion">Pie is better than cake.</a>
-        </div>
-        <div class="card-body">
-          <p>Posers can bake a passable cake from a box. Posers can't bake a passable pie. Pie is the no-posers-allowed zone of desserts. Pie keeps it real.</p>
-        </div>
-      </article>
-      <article class="card my-3">
-        <div class="card-header">
-          <a href="discussion">Free will is an illusion.</a>
-        </div>
-        <div class="card-body">
-          <p>The atoms in our bodies behave according to the laws of physics. If we had a sufficiently powerful supercomputer, it could simulate the future behavior of the atoms that make up our bodies, therefore predicting our every future move.</p>
-        </div>
-      </article>
-    </main>
+    <main id="opinions"></main>
     <form>
       <input type="text" placeholder="What do you think?" class="form-control my-1">
       <textarea placeholder="Why?" class="form-control my-1"></textarea>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+
+    // Generate an article for an opinion
+    const opinionArticle = function(opinion) {
+      return $(`
+        <article class="card my-3">
+          <div class="card-header">
+            <a href="discussion?topic=${opinion._id}">${opinion.claim}</a>
+          </div>
+          <div class="card-body">
+            <p>${opinion.argument}</p>
+          </div>
+        </article>
+      `);
+    };
+
+    // Load all opinions from the database
+    $.ajax({method: 'GET', url: '/opinions'})
+      .done(opinions => $('#opinions').append(opinions.map(opinion => opinionArticle(opinion))));
+
+    </script>
   </body>
 </html>
