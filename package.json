@@ -1,0 +1,15 @@
+{
+  "name": "opine",
+  "version": "1.0.0",
+  "description": "An opinion-sharing website.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lisa Torrey",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2",
+    "mongodb": "^3.0.3"
+  }
+}
