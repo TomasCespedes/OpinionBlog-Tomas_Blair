@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Opine</title>
+  </head>
+  <body>
+    <header id="opinion" class="jumbotron">
+      <h1 class="loading">Loading opinion...</h1>
+    </header>
+    <main id="comments" class="container">
+      <p class="loading">Loading comments...</p>
+    </main>
+    <form class="container">
+      <textarea placeholder="What do you think?" class="form-control my-1"></textarea>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <footer class="bg-dark fixed-bottom p-2">
+      <a href="/" class="text-white float-left">Back to all opinions</a>
+    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+
+    // Generate a header for the opinion
+    const opinionHeader = function(opinion) {
+      return $(`
+        <header>
+          <h1>${opinion.claim}</h1>
+          <p>${opinion.argument}</p>
+        </header>
+      `);
+    };
+
+    // Generate an article for a comment
+    const commentArticle = function(comment) {
+      return $(`
+        <article>
+          <p>${comment.argument}</p>
+        </article>
+      `);
+    };
+
+    // Get the opinion ID for this page
+    const topic = new URLSearchParams(window.location.search).get('topic');
+
+    // Load the opinion from the database
+    $.ajax({method: 'GET', url: `/opinions/${topic}`})
+      .done(function(opinion) {
+        $('#opinion .loading').remove();
+        $('#opinion').append(opinionHeader(opinion).children());
+      });
+
+    // Load the comments on this opinion from the database
+    $.ajax({method: 'GET', url: `/comments?opinion_id=${topic}`})
+      .done(function(comments) {
+        $('#comments .loading').remove();
+        $('#comments').append(comments.map(comment => commentArticle(comment)));
+      });
+
+    </script>
+  </body>
+</html>

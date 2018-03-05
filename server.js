@@ -1,13 +1,4 @@
 // Web server for an opinion-sharing site
-let db = null;
-const mongodb = require('mongodb');
-mongodb.MongoClient.connect('mongodb://localhost:27017', function(error, client) {
-  if (error) throw error;
-  db = client.db('opine');
-  db.opinions = db.collection('opinions');
-  db.comments = db.collection('comments');
-});
-
 const express = require('express');
 const server = express();
 
@@ -17,51 +8,20 @@ server.get('/favicon.ico', function(request, response) {
   response.sendStatus(204);
 });
 
+// Logging
 server.use(function(request, response, next) {
   console.log(request.method, request.url, request.body);
   next();
 });
 
-///////////////////////////////////// Front end routes
+// Front end routes
+server.use(express.static('front', {extensions: ['html']}));
 
-server.get('/', function(request, response) {
-  response.sendFile('index.html', {root: __dirname});
-});
+// Back end APIs
+server.use('/opinions', require('./back/opinions'));
+server.use('/comments', require('./back/comments'));
 
-server.get('/discussion', function(request, response) {
-  response.sendFile('discussion.html', {root: __dirname});
-});
-
-///////////////////////////////////// Back end routes
-
-server.get('/opinions', function(request, response, next) {
-  db.opinions.find().toArray(function(error, opinions) {
-    if (error) return next(error);
-    response.json(opinions);
-  });
-});
-
-server.get('/opinions/:id', function(request, response, next) {
-  const opinion = {_id: new mongodb.ObjectId(request.params.id)};
-
-  db.opinions.findOne(opinion, function(error, opinion) {
-    if (error) return next(error);
-    if (!opinion) return next(new Error('Not found'));
-    response.json(opinion);
-  });
-});
-
-server.get('/comments', function(request, response, next) {
-  const comment = {opinion_id: new mongodb.ObjectId(request.query.opinion_id)};
-
-  db.comments.find(comment).toArray(function(error, comments) {
-    if (error) return next(error);
-    response.json(comments);
-  });
-});
-
-/////////////////////////////////////
-
+// Error handling
 server.use(function(error, request, response, next) {
   console.log(error.stack);
 
