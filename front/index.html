@@ -11,9 +11,9 @@
     <main id="opinions">
       <p class="loading">Loading opinions...</p>
     </main>
-    <form>
-      <input type="text" placeholder="What do you think?" class="form-control my-1">
-      <textarea placeholder="Why?" class="form-control my-1"></textarea>
+    <form id="new">
+      <input type="text" placeholder="What do you think?" id="claim" class="form-control my-1" autocomplete="off" required>
+      <textarea placeholder="Why?" id="argument" class="form-control my-1" required></textarea>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -40,6 +40,24 @@
         $('#opinions .loading').remove();
         $('#opinions').append(opinions.map(opinion => opinionArticle(opinion)));
       });
+
+    // Handle form submit to post a new opinion
+    $('#new').on('submit', function(event) {
+      event.preventDefault();
+      const opinion = {
+        claim: $('#claim').val().trim(),
+        argument: $('#argument').val().trim(),
+      };
+
+      const form = this;
+      $.ajax({method: 'POST', url: '/opinions', data: opinion})
+        .fail(() => alert('Could not submit!'))
+        .done(function(opinion) {
+          $('#opinions').append(opinionArticle(opinion));
+          form.reset();
+        });
+    });
+
     </script>
   </body>
 </html>

@@ -29,4 +29,17 @@ router.get('/:id', function(request, response, next) {
   });
 });
 
+// Post a new opinion
+router.post('/', function(request, response, next) {
+  const opinion = {
+    claim: request.body.claim,
+    argument: request.body.argument,
+  };
+
+  db.opinions.insertOne(opinion, function(error) {
+    if (error) return next(error);
+    response.json(opinion);
+  });
+});
+
 module.exports = router;

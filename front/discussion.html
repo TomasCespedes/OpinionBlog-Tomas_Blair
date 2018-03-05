@@ -47,6 +47,7 @@
 
     // Load the opinion from the database
     $.ajax({method: 'GET', url: `/opinions/${topic}`})
+      .fail(() => $('#opinion .loading').text('Could not load opinion!'))
       .done(function(opinion) {
         $('#opinion .loading').remove();
         $('#opinion').append(opinionHeader(opinion).children());
@@ -54,6 +55,7 @@
 
     // Load the comments on this opinion from the database
     $.ajax({method: 'GET', url: `/comments?opinion_id=${topic}`})
+      .fail(() => $('#comments .loading').text('Could not load comments!'))
       .done(function(comments) {
         $('#comments .loading').remove();
         $('#comments').append(comments.map(comment => commentArticle(comment)));
