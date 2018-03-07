@@ -33,4 +33,14 @@ router.post('/', function(request, response, next) {
   });
 });
 
+// Delete a comment
+router.delete('/:id', function(request, response, next) {
+  const comment = {_id: new mongodb.ObjectId(request.params.id)};
+
+  db.comments.deleteOne(comment, function(error) {
+    if (error) return next(error);
+    response.end();
+  });
+});
+
 module.exports = router;
