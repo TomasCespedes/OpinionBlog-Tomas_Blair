@@ -13,8 +13,8 @@
     <main id="comments" class="container">
       <p class="loading">Loading comments...</p>
     </main>
-    <form class="container">
-      <textarea placeholder="What do you think?" class="form-control my-1"></textarea>
+    <form id="new" class="container">
+      <textarea id="argument" placeholder="What do you think?" class="form-control my-1" required></textarea>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <footer class="bg-dark fixed-bottom p-2">
@@ -42,7 +42,7 @@
       `);
     };
 
-    // Get the opinion ID for this page
+    // Get the opinion ID for this page out of the URL
     const topic = new URLSearchParams(window.location.search).get('topic');
 
     // Load the opinion from the database
@@ -60,6 +60,23 @@
         $('#comments .loading').remove();
         $('#comments').append(comments.map(comment => commentArticle(comment)));
       });
+
+    // Handle form submit to post a new comment
+    $('#new').on('submit', function(event) {
+      event.preventDefault();
+      const comment = {
+        opinion_id: topic,
+        argument: $('#argument').val().trim(),
+      };
+
+      const form = this;
+      $.ajax({method: 'POST', url: '/comments', data: comment})
+        .fail(() => alert('Could not submit!'))
+        .done(function(comment) {
+          $('#comments').append(commentArticle(comment));
+          form.reset();
+        });
+    });
 
     </script>
   </body>

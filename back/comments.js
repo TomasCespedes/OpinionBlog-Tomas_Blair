@@ -20,4 +20,17 @@ router.get('/', function(request, response, next) {
   });
 });
 
+// Post a new comment
+router.post('/', function(request, response, next) {
+  const comment = {
+    opinion_id: new mongodb.ObjectId(request.body.opinion_id),
+    argument: request.body.argument,
+  };
+
+  db.comments.insertOne(comment, function(error) {
+    if (error) return next(error);
+    response.json(comment);
+  });
+});
+
 module.exports = router;
