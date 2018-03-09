@@ -45,7 +45,7 @@
         </article>
       `);
 
-      // If I'm not logged in or I didn't write this comment
+      // No delete option if the user isn't the comment author
       if (!self || self.id !== comment.author.id) {
         article.find('.delete').remove();
       }
@@ -53,17 +53,23 @@
       return article;
     };
 
-    // Check if we're logged in
+    /////////////////////////////////////////////////////////////////////////// Divider between "how it looks" and "how it works"
+
+    // Check if the user is logged in
     let self = null;
     $.ajax({method: 'GET', url: '/user'})
       .done(function(user) {
         self = user;
+
+        // Make a few changes to the page if so
         if (self) {
           $('#log').attr('href', '/logout').text('Log out');
-          $('#new :input').prop('disabled', false); // Enable submit form
+          $('#new :input').prop('disabled', false);
         }
 
         // Load the comments on this opinion from the database
+        // Comments render differently depending on who is logged in
+        // So we are making sure to do this after we know who is logged in
         $.ajax({method: 'GET', url: `/comments?opinion_id=${topic}`})
           .fail(() => $('#comments .loading').text('Could not load comments!'))
           .done(function(comments) {
@@ -72,7 +78,7 @@
           });
       });
 
-    // Get the opinion ID for this page out of the URL
+    // Get the opinion ID out of the URL
     const topic = new URLSearchParams(window.location.search).get('topic');
 
     // Load the opinion from the database
@@ -83,16 +89,17 @@
         $('#opinion').append(opinionHeader(opinion).children());
       });
 
-    // Handle form submit to post a new comment
+    // Handle form submit
     $('#new').on('submit', function(event) {
       event.preventDefault();
-      const comment = {
+      const body = {
         opinion_id: topic,
         argument: $('#argument').val().trim(),
       };
 
+      // Post a new comment
       const form = this;
-      $.ajax({method: 'POST', url: '/comments', data: comment})
+      $.ajax({method: 'POST', url: '/comments', data: body})
         .fail(() => alert('Could not submit!'))
         .done(function(comment) {
           $('#comments').append(commentArticle(comment));
@@ -100,12 +107,13 @@
         });
     });
 
-    // Handle clicks on delete links to delete comments
+    // Handle clicks on delete links
     $('#comments').on('click', '.delete', function(event) {
       event.preventDefault();
       if (confirm('Delete this comment permanently?')) {
         const article = $(this).closest('article');
 
+        // Delete a comment
         $.ajax({method: 'DELETE', url: `/comments/${article.attr('id')}`})
           .fail(() => alert('Could not delete!'))
           .done(() => article.remove());

@@ -1,4 +1,8 @@
-// REST API routes for the opinions collection
+// REST API for the opinions collection
+const express = require('express');
+const router = express.Router();
+
+// Connect to the collection
 let db = null;
 const mongodb = require('mongodb');
 mongodb.MongoClient.connect('mongodb://localhost:27017', function(error, client) {
@@ -6,9 +10,6 @@ mongodb.MongoClient.connect('mongodb://localhost:27017', function(error, client)
   db = client.db('opine');
   db.opinions = db.collection('opinions');
 });
-
-const express = require('express');
-const router = express.Router();
 
 // Get all the opinions
 router.get('/', function(request, response, next) {
@@ -29,10 +30,10 @@ router.get('/:id', function(request, response, next) {
   });
 });
 
-// Post a new opinion
+// Post a new opinion (user must be logged in)
 router.post('/', function(request, response, next) {
   const opinion = {
-    author: request.user, // Logged-in user
+    author: request.user,
     claim: request.body.claim,
     argument: request.body.argument,
   };

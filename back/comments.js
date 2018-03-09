@@ -1,4 +1,8 @@
-// REST API routes for the comments collection
+// REST API for the comments collection
+const express = require('express');
+const router = express.Router();
+
+// Connect to the collection
 let db = null;
 const mongodb = require('mongodb');
 mongodb.MongoClient.connect('mongodb://localhost:27017', function(error, client) {
@@ -6,9 +10,6 @@ mongodb.MongoClient.connect('mongodb://localhost:27017', function(error, client)
   db = client.db('opine');
   db.comments = db.collection('comments');
 });
-
-const express = require('express');
-const router = express.Router();
 
 // Get all the comments for a specific opinion
 router.get('/', function(request, response, next) {
@@ -20,10 +21,10 @@ router.get('/', function(request, response, next) {
   });
 });
 
-// Post a new comment
+// Post a new comment (user must be logged in)
 router.post('/', function(request, response, next) {
   const comment = {
-    author: request.user, // Logged-in user
+    author: request.user,
     opinion_id: new mongodb.ObjectId(request.body.opinion_id),
     argument: request.body.argument,
   };
@@ -34,11 +35,11 @@ router.post('/', function(request, response, next) {
   });
 });
 
-// Delete a comment
+// Delete a comment (user must be logged in and match the comment author)
 router.delete('/:id', function(request, response, next) {
   const comment = {
-    author: request.user, // Logged-in user
-    _id: new mongodb.ObjectId(request.params.id)
+    _id: new mongodb.ObjectId(request.params.id),
+    author: request.user,
   };
 
   db.comments.deleteOne(comment, function(error, report) {

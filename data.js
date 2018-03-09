@@ -2,12 +2,23 @@
 const db = new Mongo().getDB('opine');
 db.dropDatabase();
 
+// Validate collections
+
 db.createCollection('opinions', {validator: {$and: [
   {claim: {$type: 'string', $ne: ''}},
   {argument: {$type: 'string', $ne: ''}},
   {'author.id': {$type: 'string', $ne: ''}},
   {'author.name': {$type: 'string', $ne: ''}},
 ]}});
+
+db.createCollection('comments', {validator: {$and: [
+  {opinion_id: {$type: 'objectId', $ne: ''}},
+  {argument: {$type: 'string', $ne: ''}},
+  {'author.id': {$type: 'string', $ne: ''}},
+  {'author.name': {$type: 'string', $ne: ''}},
+]}});
+
+// Test data
 
 const pie = db.opinions.insertOne({
   author: {id: '114095023332102109087', name: 'Lisa Torrey'},
@@ -20,13 +31,6 @@ const will = db.opinions.insertOne({
   claim: "Free will is an illusion.",
   argument: "The atoms in our bodies behave according to the laws of physics. If we had a sufficiently powerful supercomputer, it could simulate the future behavior of the atoms that make up our bodies, therefore predicting our every future move.",
 });
-
-db.createCollection('comments', {validator: {$and: [
-  {opinion_id: {$type: 'objectId', $ne: ''}},
-  {argument: {$type: 'string', $ne: ''}},
-  {'author.id': {$type: 'string', $ne: ''}},
-  {'author.name': {$type: 'string', $ne: ''}},
-]}});
 
 db.comments.insertMany([
   {

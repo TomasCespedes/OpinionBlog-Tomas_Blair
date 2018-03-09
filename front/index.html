@@ -37,12 +37,14 @@
       `);
     };
 
-    // Check if we're logged in
+    /////////////////////////////////////////////////////////////////////////// Divider between "how it looks" and "how it works"
+
+    // Make a few changes to the page if the user is logged in
     $.ajax({method: 'GET', url: '/user'})
       .done(function(user) {
         if (user) {
           $('#log').attr('href', '/logout').text('Log out');
-          $('#new :input').prop('disabled', false); // Enable submit form
+          $('#new :input').prop('disabled', false);
         }
       });
 
@@ -54,16 +56,17 @@
         $('#opinions').append(opinions.map(opinion => opinionArticle(opinion)));
       });
 
-    // Handle form submit to post a new opinion
+    // Handle form submit
     $('#new').on('submit', function(event) {
       event.preventDefault();
-      const opinion = {
+      const body = {
         claim: $('#claim').val().trim(),
         argument: $('#argument').val().trim(),
       };
 
+      // Post a new opinion
       const form = this;
-      $.ajax({method: 'POST', url: '/opinions', data: opinion})
+      $.ajax({method: 'POST', url: '/opinions', data: body})
         .fail(() => alert('Could not submit!'))
         .done(function(opinion) {
           $('#opinions').append(opinionArticle(opinion));
