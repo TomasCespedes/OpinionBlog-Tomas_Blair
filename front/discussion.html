@@ -14,8 +14,8 @@
       <p class="loading">Loading comments...</p>
     </main>
     <form id="new" class="container mb-5">
-      <textarea id="argument" placeholder="What do you think?" class="form-control my-1" required></textarea>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <textarea id="argument" placeholder="What do you think?" class="form-control my-1" required disabled></textarea>
+      <button type="submit" class="btn btn-primary" disabled>Submit</button>
     </form>
     <footer class="bg-dark fixed-bottom p-2">
       <a href="/" class="text-white float-left">Back to all opinions</a>
@@ -30,6 +30,7 @@
         <header>
           <h1>${opinion.claim}</h1>
           <p>${opinion.argument}</p>
+          <span class="badge badge-pill badge-dark">${opinion.author.name}</span>
         </header>
       `);
     };
@@ -39,10 +40,20 @@
       return $(`
         <article id="${comment._id}" class="border-bottom my-3 pb-3">
           <p>${comment.argument}</p>
-          <a class="delete" href="#">[Delete]</a>
+          <span class="badge badge-pill badge-dark">${comment.author.name}</span>
+          <a class="delete mx-3" href="#">[Delete]</a>
         </article>
       `);
     };
+
+    // Check if we're logged in
+    $.ajax({method: 'GET', url: '/user'})
+      .done(function(user) {
+        if (user) {
+          $('#log').attr('href', '/logout').text('Log out');
+          $('#new :input').prop('disabled', false); // Enable submit form
+        }
+      });
 
     // Get the opinion ID for this page out of the URL
     const topic = new URLSearchParams(window.location.search).get('topic');

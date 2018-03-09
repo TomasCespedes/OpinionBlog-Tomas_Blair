@@ -23,6 +23,7 @@ router.get('/', function(request, response, next) {
 // Post a new comment
 router.post('/', function(request, response, next) {
   const comment = {
+    author: request.user, // Logged-in user
     opinion_id: new mongodb.ObjectId(request.body.opinion_id),
     argument: request.body.argument,
   };
@@ -35,10 +36,14 @@ router.post('/', function(request, response, next) {
 
 // Delete a comment
 router.delete('/:id', function(request, response, next) {
-  const comment = {_id: new mongodb.ObjectId(request.params.id)};
+  const comment = {
+    author: request.user, // Logged-in user
+    _id: new mongodb.ObjectId(request.params.id)
+  };
 
-  db.comments.deleteOne(comment, function(error) {
+  db.comments.deleteOne(comment, function(error, report) {
     if (error) return next(error);
+    if (!report.deletedCount) return next(new Error('Forbidden'));
     response.end();
   });
 });

@@ -76,6 +76,9 @@ server.use(function(error, request, response, next) {
     case 'Document failed validation':
       response.sendStatus(400);
       break;
+    case 'Forbidden':
+      response.sendStatus(403);
+      break;
     case 'Not found':
     case 'Argument passed in must be a single String of 12 bytes or a string of 24 hex characters':
       response.sendStatus(404);

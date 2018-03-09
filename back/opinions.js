@@ -32,6 +32,7 @@ router.get('/:id', function(request, response, next) {
 // Post a new opinion
 router.post('/', function(request, response, next) {
   const opinion = {
+    author: request.user, // Logged-in user
     claim: request.body.claim,
     argument: request.body.argument,
   };

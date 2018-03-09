@@ -24,14 +24,18 @@ const will = db.opinions.insertOne({
 db.createCollection('comments', {validator: {$and: [
   {opinion_id: {$type: 'objectId', $ne: ''}},
   {argument: {$type: 'string', $ne: ''}},
+  {'author.id': {$type: 'string', $ne: ''}},
+  {'author.name': {$type: 'string', $ne: ''}},
 ]}});
 
 db.comments.insertMany([
   {
+    author: {id: '112346505532165654868', name: 'Ed Harcourt'},
     opinion_id: pie.insertedId,
     argument: "Cake has frosting and therefore cake is better.",
   },
   {
+    author: {id: '114095023332102109087', name: 'Lisa Torrey'},
     opinion_id: pie.insertedId,
     argument: "The cake is a lie.",
   },
@@ -39,10 +43,12 @@ db.comments.insertMany([
 
 db.comments.insertMany([
   {
+    author: {id: '114095023332102109087', name: 'Lisa Torrey'},
     opinion_id: will.insertedId,
     argument: "In order to predict how a hydrogen atom will behave, you'll have to predict how things smaller than atoms behave -- electrons, photons, quarks and other quanta. These particles behave in ways that are stochastic, or non-determined.",
   },
   {
+    author: {id: '112346505532165654868', name: 'Ed Harcourt'},
     opinion_id: will.insertedId,
     argument: "Why would quantum randomness make free will exist though? Throwing dice is unpredictable but I wouldn't say dice have free will.",
   },
