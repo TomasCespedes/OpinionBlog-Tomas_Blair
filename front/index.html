@@ -12,9 +12,9 @@
       <p class="loading">Loading opinions...</p>
     </main>
     <form id="new">
-      <input type="text" placeholder="What do you think?" id="claim" class="form-control my-1" autocomplete="off" required>
-      <textarea placeholder="Why?" id="argument" class="form-control my-1" required></textarea>
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <input type="text" placeholder="What do you think?" id="claim" class="form-control my-1" autocomplete="off" required disabled>
+      <textarea placeholder="Why?" id="argument" class="form-control my-1" required disabled></textarea>
+      <button type="submit" class="btn btn-primary" disabled>Submit</button>
     </form>
     <footer class="bg-dark fixed-bottom p-2">
       <a href="/auth" id="log" class="text-white float-right">Log in with Google</a>
@@ -35,6 +35,15 @@
         </article>
       `);
     };
+
+    // Check if we're logged in
+    $.ajax({method: 'GET', url: '/user'})
+      .done(function(user) {
+        if (user) {
+          $('#log').attr('href', '/logout').text('Log out');
+          $('#new :input').prop('disabled', false); // Enable submit form
+        }
+      });
 
     // Load all opinions from the database
     $.ajax({method: 'GET', url: '/opinions'})
