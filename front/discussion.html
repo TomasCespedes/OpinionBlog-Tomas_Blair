@@ -37,22 +37,39 @@
 
     // Generate an article for a comment
     const commentArticle = function(comment) {
-      return $(`
+      const article = $(`
         <article id="${comment._id}" class="border-bottom my-3 pb-3">
           <p>${comment.argument}</p>
           <span class="badge badge-pill badge-dark">${comment.author.name}</span>
           <a class="delete mx-3" href="#">[Delete]</a>
         </article>
       `);
+
+      // If I'm not logged in or I didn't write this comment
+      if (!self || self.id !== comment.author.id) {
+        article.find('.delete').remove();
+      }
+
+      return article;
     };
 
     // Check if we're logged in
+    let self = null;
     $.ajax({method: 'GET', url: '/user'})
       .done(function(user) {
-        if (user) {
+        self = user;
+        if (self) {
           $('#log').attr('href', '/logout').text('Log out');
           $('#new :input').prop('disabled', false); // Enable submit form
         }
+
+        // Load the comments on this opinion from the database
+        $.ajax({method: 'GET', url: `/comments?opinion_id=${topic}`})
+          .fail(() => $('#comments .loading').text('Could not load comments!'))
+          .done(function(comments) {
+            $('#comments .loading').remove();
+            $('#comments').append(comments.map(comment => commentArticle(comment)));
+          });
       });
 
     // Get the opinion ID for this page out of the URL
@@ -64,14 +81,6 @@
       .done(function(opinion) {
         $('#opinion .loading').remove();
         $('#opinion').append(opinionHeader(opinion).children());
-      });
-
-    // Load the comments on this opinion from the database
-    $.ajax({method: 'GET', url: `/comments?opinion_id=${topic}`})
-      .fail(() => $('#comments .loading').text('Could not load comments!'))
-      .done(function(comments) {
-        $('#comments .loading').remove();
-        $('#comments').append(comments.map(comment => commentArticle(comment)));
       });
 
     // Handle form submit to post a new comment
