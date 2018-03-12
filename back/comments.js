@@ -23,6 +23,8 @@ router.get('/', function(request, response, next) {
 
 // Post a new comment (user must be logged in)
 router.post('/', function(request, response, next) {
+  if (!request.user) return next(new Error('Forbidden'));
+  
   const comment = {
     author: request.user,
     opinion_id: new mongodb.ObjectId(request.body.opinion_id),

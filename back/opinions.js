@@ -32,6 +32,8 @@ router.get('/:id', function(request, response, next) {
 
 // Post a new opinion (user must be logged in)
 router.post('/', function(request, response, next) {
+  if (!request.user) return next(new Error('Forbidden'));
+  
   const opinion = {
     author: request.user,
     claim: request.body.claim,
