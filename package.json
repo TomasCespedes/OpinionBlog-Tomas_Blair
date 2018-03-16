@@ -1,18 +1,15 @@
 {
-  "name": "opine",
+  "name": "opinions_blair_and_tomas",
   "version": "1.0.0",
-  "description": "An opinion-sharing website.",
-  "main": "server.js",
+  "description": "stores opinions",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Lisa Torrey",
+  "author": "Blair Champion",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.2",
-    "express-session": "^1.15.6",
-    "mongodb": "^3.0.3",
-    "passport": "^0.4.0",
-    "passport-google-oauth": "^1.0.0"
+    "express": "^4.16.3",
+    "mongodb": "^3.0.4"
   }
 }
