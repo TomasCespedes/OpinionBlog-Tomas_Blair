@@ -38,6 +38,7 @@ router.post('/', function(request, response, next) {
     author: request.user,
     claim: request.body.claim,
     argument: request.body.argument,
+    likes_count: Number,
   };
 
   db.opinions.insertOne(opinion, function(error) {
@@ -46,7 +47,8 @@ router.post('/', function(request, response, next) {
   });
 });
 
-// Anonymize an opinion
+  // Anonymize an opinion
+  
 
 
 module.exports = router;

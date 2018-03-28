@@ -24,7 +24,7 @@
 
     // Generate an article for an opinion
     const opinionArticle = function(opinion) {
-      return $(`
+      const oArticle = $(`
         <article class="card my-3">
           <div class="card-header">
             <a href="discussion?topic=${opinion._id}">${opinion.claim}</a>
@@ -32,12 +32,24 @@
           <div class="card-body">
             <p>${opinion.argument}</p>
             <span class="badge badge-pill badge-dark">${opinion.author.name}</span>
+            <button id="like-unlike">Like</button>
+            <button id="anon" onclick="anonymousButton()">Anonymize</button>
           </div>
         </article>
       `);
+
+      if (!self || self.id !== opinion.author.id) {
+        oArticle.find('#anon').remove();
+      }
+
+      return oArticle
     };
 
+
+
     /////////////////////////////////////////////////////////////////////////// Divider between "how it looks" and "how it works"
+    // like button
+
 
     // Make a few changes to the page if the user is logged in
     $.ajax({method: 'GET', url: '/user'})
