@@ -24,6 +24,7 @@
 
     // Generate an article for an opinion
     const opinionArticle = function(opinion) {
+
       const oArticle = $(`
         <article class="card my-3">
           <div class="card-header">
@@ -31,9 +32,9 @@
           </div>
           <div class="card-body">
             <p>${opinion.argument}</p>
-            <span class="badge badge-pill badge-dark">${opinion.author.name}</span>
+            <span class="authorbadge badge badge-pill badge-dark">${opinion.author.name}</span>
             <button class="like-unlike" hidden>Like</button>
-            <button onclick="anonymousButton()" class="anon btn btn-primary" hidden>Anonymize</button>
+            <button onclick="btnClick()" class="anon btn btn-primary" hidden>Anonymize</button>
           </div>
         </article>
       `);
@@ -48,6 +49,13 @@
           }
         });
 
+
+      btnClick = function() {
+        opinion.author.name = "Anonymous"
+        opinion.author.id = "Anonymous"
+        oArticle.find('.authorbadge').text('Anonymous')
+      }
+
       return oArticle
     };
 
@@ -55,6 +63,12 @@
 
     /////////////////////////////////////////////////////////////////////////// Divider between "how it looks" and "how it works"
     // like button
+    const btnclick =  function(){
+        $('.anon').click(function(){
+          var namestemp = oArticle.find(opinion.author.name)
+          console.log(namestemp)
+        });
+    }
 
 
     // Make a few changes to the page if the user is logged in
