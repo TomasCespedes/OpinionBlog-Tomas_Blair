@@ -32,15 +32,18 @@
           <div class="card-body">
             <p>${opinion.argument}</p>
             <span class="badge badge-pill badge-dark">${opinion.author.name}</span>
-            <button id="like-unlike">Like</button>
-            <button id="anon" onclick="anonymousButton()" class="btn btn-primary" hidden>Anonymize</button>
+            <button class="like-unlike">Like</button>
+            <button onclick="anonymousButton()" class="anon btn btn-primary" hidden>Anonymize</button>
           </div>
         </article>
       `);
 
-      if (!self || self.id !== opinion.author.id) {
-        oArticle.find('#anon').remove();
-      }
+      $.ajax({method: 'GET', url: '/user'})
+        .done(function(user) {
+          if (user && user.id == opinion.author.id) {
+            oArticle.find('.anon').prop('hidden', false);
+          }
+        });
 
       return oArticle
     };
@@ -57,7 +60,6 @@
         if (user) {
           $('#log').attr('href', '/logout').text('Log out');
           $('#new :input').prop('disabled', false);
-          $('#anon').prop('hidden', false);
         }
       });
 
