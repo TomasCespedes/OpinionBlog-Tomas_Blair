@@ -32,7 +32,7 @@
           <div class="card-body">
             <p>${opinion.argument}</p>
             <span class="badge badge-pill badge-dark">${opinion.author.name}</span>
-            <button class="like-unlike">Like</button>
+            <button class="like-unlike" hidden>Like</button>
             <button onclick="anonymousButton()" class="anon btn btn-primary" hidden>Anonymize</button>
           </div>
         </article>
@@ -42,6 +42,9 @@
         .done(function(user) {
           if (user && user.id == opinion.author.id) {
             oArticle.find('.anon').prop('hidden', false);
+          }
+          if (user && user.id != opinion.author.id) {
+            oArticle.find('.like-unlike').prop('hidden', false);
           }
         });
 
