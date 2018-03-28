@@ -33,7 +33,7 @@
             <p>${opinion.argument}</p>
             <span class="badge badge-pill badge-dark">${opinion.author.name}</span>
             <button id="like-unlike">Like</button>
-            <button id="anon" onclick="anonymousButton()">Anonymize</button>
+            <button id="anon" onclick="anonymousButton()" class="btn btn-primary" hidden>Anonymize</button>
           </div>
         </article>
       `);
@@ -57,6 +57,7 @@
         if (user) {
           $('#log').attr('href', '/logout').text('Log out');
           $('#new :input').prop('disabled', false);
+          $('#anon').prop('hidden', false);
         }
       });
 
