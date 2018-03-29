@@ -34,10 +34,14 @@
             <p>${opinion.argument}</p>
             <span class="authorbadge badge badge-pill badge-dark">${opinion.author.name}</span>
             <button class="like-unlike" hidden>Like</button>
-            <button onclick="btnClick()" class="anon btn btn-primary" hidden>Anonymize</button>
+            <button class="anon btn btn-primary" hidden>Anonymize</button>
           </div>
         </article>
       `);
+
+      oArticle.find('.anon').on('click', function() {
+        oArticle.find('.authorbadge').text('Anonymous');
+      });
 
       $.ajax({method: 'GET', url: '/user'})
         .done(function(user) {
@@ -48,13 +52,6 @@
             oArticle.find('.like-unlike').prop('hidden', false);
           }
         });
-
-
-      btnClick = function() {
-        opinion.author.name = "Anonymous";
-        opinion.author.id = "Anonymous";
-        oArticle.find('.authorbadge').text('Anonymous');
-      }
 
       return oArticle
     };
