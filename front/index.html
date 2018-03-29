@@ -33,6 +33,7 @@
           <div class="card-body">
             <p>${opinion.argument}</p>
             <span class="authorbadge badge badge-pill badge-dark">${opinion.author.name}</span>
+
             <button class="like-unlike" hidden>Like</button>
             <button class="anon btn btn-primary" hidden>Anonymize</button>
           </div>
@@ -40,18 +41,11 @@
       `);
 
       oArticle.find('.anon').on('click', function() {
-        //oArticle.find('.authorbadge').text('Anonymous');
-
-        $.ajax({method: 'GET', url: '/opinions'})
+        $.ajax({method: 'PATCH', url: `/opinions/${opinion._id}`})
         .fail(() => alert('Could not anonymize'))
-        .done(function(opinion) {
+        .done(function() {
           oArticle.find('.authorbadge').text('Anonymous');
-          opinion.id = 'Anonymous'
-          opinion.name = 'Anonymous'
-          //oArticle.opinion.id = 'Anonymous'
-          //oArticle.opinion.name = 'Anonymous'
         });
-
       });
 
       $.ajax({method: 'GET', url: '/user'})
@@ -67,11 +61,7 @@
       return oArticle
     };
 
-
-
     /////////////////////////////////////////////////////////////////////////// Divider between "how it looks" and "how it works"
-    // like button
-
 
     // Make a few changes to the page if the user is logged in
     $.ajax({method: 'GET', url: '/user'})

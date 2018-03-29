@@ -47,8 +47,21 @@ router.post('/', function(request, response, next) {
   });
 });
 
-  // Anonymize an opinion
-  
+router.patch('/:id', function(request, response, next) {
+  const opinion = {_id: new mongodb.ObjectId(request.params.id)};
+  const newOpinion = {
+    $set: {
+      author: {id: 'Anonymous', name: 'Anonymous'}
+    }
+  }
+
+  db.opinions.updateOne(opinion, newOpinion, function(error, report) {
+    if (error) return next(error);
+    if (!report.matchedCount) return next(new Error('Not found'));
+    response.end();
+  });
+});
+
 
 
 module.exports = router;
