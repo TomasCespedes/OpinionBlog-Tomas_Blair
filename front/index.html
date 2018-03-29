@@ -40,7 +40,18 @@
       `);
 
       oArticle.find('.anon').on('click', function() {
-        oArticle.find('.authorbadge').text('Anonymous');
+        //oArticle.find('.authorbadge').text('Anonymous');
+
+        $.ajax({method: 'GET', url: '/opinions'})
+        .fail(() => alert('Could not anonymize'))
+        .done(function(opinion) {
+          oArticle.find('.authorbadge').text('Anonymous');
+          opinion.id = 'Anonymous'
+          opinion.name = 'Anonymous'
+          //oArticle.opinion.id = 'Anonymous'
+          //oArticle.opinion.name = 'Anonymous'
+        });
+
       });
 
       $.ajax({method: 'GET', url: '/user'})
