@@ -16,7 +16,18 @@
     </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
+    // Check if the user is logged in
+    let self = null;
+    $.ajax({method: 'GET', url: '/user'})
+      .done(function(user) {
+        self = user;
 
-
+        // Make a few changes to the page if so
+        if (self) {
+          $('#log').attr('href', '/logout').text('Log out');
+          $('#new :input').prop('disabled', false);
+        }
+      });
+    </script>
   </body>
 </html>
