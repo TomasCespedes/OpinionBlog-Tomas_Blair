@@ -16,6 +16,16 @@
     </footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
+
+    // Generate a header for the opinion
+    const opinionHeader = function(opinion) {
+      return $(`
+        <header>
+          <h1>${opinion.author.name}</h1>
+        </header>
+      `);
+    };
+
     // Check if the user is logged in
     let self = null;
     $.ajax({method: 'GET', url: '/user'})
@@ -28,6 +38,20 @@
           $('#new :input').prop('disabled', false);
         }
       });
+
+      // Get the opinion ID out of the URL
+      const topic = new URLSearchParams(window.location.search).get('topic');
+
+      // Load the opinion from the database
+      $.ajax({method: 'GET', url: `/opinions/${topic}`})
+        .fail(() => $('#opinion .loading').text('Could not load opinion!'))
+        .done(function(opinion) {
+          $('#opinion .loading').remove();
+          $('#opinion').append(opinionHeader(opinion).children());
+        });
+
+
+
     </script>
   </body>
 </html>
