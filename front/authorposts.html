@@ -10,6 +10,9 @@
     <header id="opinion" class="jumbotron">
       <h1 class="loading">Loading Author...</h1>
     </header>
+    <main id="oArticles" class="container">
+      <p class="loading">Loading Opinions...</p>
+    </main>
     <footer class="bg-dark fixed-bottom p-2">
       <a href="/" class="text-white float-left">Back to all opinions</a>
       <a href="/auth" id="log" class="text-white float-right">Log in with Google</a>
@@ -26,6 +29,20 @@
       `);
     };
 
+    const opinionArticle = function(opinion) {
+      const article= $(`
+        <article class="card my-3">
+          <div class="card-header">
+            <a href="discussion?topic=${opinion._id}">${opinion.claim}</a>
+          </div>
+          <div class="card-body">
+            <p>${opinion.argument}</p>
+          </div>
+        </article>
+        `);
+      return article
+    }
+
     // Check if the user is logged in
     let self = null;
     $.ajax({method: 'GET', url: '/user'})
@@ -38,6 +55,14 @@
           $('#new :input').prop('disabled', false);
         }
       });
+
+      // Load all opinions from database
+      $.ajax({method: 'GET', url: '/opinions'})
+        .fail(() => $('#oArticles .loading').text('Could not load opinions!'))
+        .done(function(opinions) {
+          $('#oArticles .loading').remove();
+          $('#oArticles').append(opinions.map(opinion => opinionArticle(opinion)));
+        });
 
       // Get the opinion ID out of the URL
       const topic = new URLSearchParams(window.location.search).get('topic');
