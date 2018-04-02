@@ -52,8 +52,8 @@
           const temp = $(this);
             $.ajax({method: 'PATCH', url: `/opinions/${opinion._id}/like`})
               .fail(() => alert('Like Failed!!'))
-              .done(function(opinion) {
-                article.find('.badge-primary').text(opinion.likes.length);
+              .done(function() {
+                article.find('.badge-primary').text(opinion.likes.length + 1);
             });
         });
 
