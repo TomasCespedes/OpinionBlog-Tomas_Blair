@@ -10,7 +10,7 @@
     <header id="opinion" class="jumbotron">
       <h1 class="loading">Loading Author...</h1>
     </header>
-    <main id="oArticles" class="container">
+    <main id="opinions" class="container">
       <p class="loading">Loading Opinions...</p>
     </main>
     <footer class="bg-dark fixed-bottom p-2">
@@ -27,7 +27,6 @@
           <h1>${opinion.author.name}</h1>
         </header>
 
-        
       `);
     };
 
@@ -35,13 +34,30 @@
       const article= $(`
         <article class="card my-3">
           <div class="card-header">
-            <a href="discussion?topic=${opinion._id}">${opinion.claim}</a>
+            <a href="authorposts?topic=${opinion._id}">${opinion.claim}</a>
           </div>
           <div class="card-body">
             <p>${opinion.argument}</p>
+            <a href="authorposts?topic=${opinion._id}">
+              <span class="badge badge-pill badge-dark" href="authorposts.html">${opinion.author.name}</span>
+            </a>
+            <span class="badge badge-pill badge-primary"> ${opinion.likes.length} </span>
+
+            <a class="like mx-3" href="#" id="likes">[likes]</a>
           </div>
         </article>
         `);
+
+        // Handle opinions likes
+        oArticle.on('click', '#likes', function() {
+          const temp = $(this);
+            $.ajax({method: 'PATCH', url: `/opinions/${opinion._id}/like`})
+              .fail(() => alert('Like Failed!!'))
+              .done(function(opinion) {
+                article.find('.badge-primary').text(opinion.likes.length);
+            });
+        });
+
       return article
     }
 
@@ -58,23 +74,20 @@
         }
       });
 
-      // Load all opinions from database
-      $.ajax({method: 'GET', url: '/opinions'})
-        .fail(() => $('#oArticles .loading').text('Could not load opinions!'))
-        .done(function(opinions) {
-          $('#oArticles .loading').remove();
-          $('#oArticles').append(opinions.map(opinion => opinionArticle(opinion)));
-        });
-
       // Get the opinion ID out of the URL
       const topic = new URLSearchParams(window.location.search).get('topic');
 
       // Load the opinion from the database
-      $.ajax({method: 'GET', url: `/opinions/${topic}`})
-        .fail(() => $('#opinion .loading').text('Could not load opinion!'))
+      $.ajax({method: 'GET', url: `/opinions/solo?opinion_id=${topic}`})
+        .fail(() => $('#opinions .loading').text('Could not load opinion!'))
         .done(function(opinion) {
-          $('#opinion .loading').remove();
-          $('#opinion').append(opinionHeader(opinion).children());
+          const opinionTemp = opinion;
+          $('#opinion .loading').text(opinion.author.name);
+          $.ajax({method: 'GET', url: `/opinions/${opinionTemp.author.id}/${opinionTemp.author.name}`})
+          .done(function (opinions) {
+            $('#opinions').find('.loading').remove();
+            $('#opinions').append(opinions.map(opinion => opinionArticle(opinion)));
+          })
         });
 
 
