@@ -53,7 +53,6 @@
         oArticle.find('.like').remove();
       }
 
-
       // Handle anonymous clicks
       oArticle.find('.anon').on('click', function() {
         $.ajax({method: 'PATCH', url: `/opinions/${opinion._id}`})

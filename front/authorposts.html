@@ -26,7 +26,6 @@
         <header>
           <h1>${opinion.author.name}</h1>
         </header>
-
       `);
     };
 
@@ -49,7 +48,7 @@
         `);
 
         // Handle opinions likes
-        oArticle.on('click', '#likes', function() {
+        article.on('click', '#likes', function() {
           const temp = $(this);
             $.ajax({method: 'PATCH', url: `/opinions/${opinion._id}/like`})
               .fail(() => alert('Like Failed!!'))
@@ -57,6 +56,10 @@
                 article.find('.badge-primary').text(opinion.likes.length);
             });
         });
+
+        if (!self || self.id === opinion.author.id) {
+          article.find('.like').remove();
+        }
 
       return article
     }

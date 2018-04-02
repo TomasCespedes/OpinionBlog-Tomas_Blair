@@ -34,6 +34,16 @@ router.get('/', function(request, response, next) {
     });
   });
 
+  // Get a specific Opinion
+    router.get('/solo', function(request, response, next) {
+      const opinion =  {_id: new mongodb.ObjectId(request.query.opinion_id)};
+      db.opinions.findOne(opinion, function(error, opinion){
+        if (error) return next(error);
+        if (!opinion) return next(new Error('Error!'));
+        response.json(opinion);
+      });
+    });
+
   // Get a specific opinion
    router.get('/:id', function(request, response, next) {
      const opinion = {_id: new mongodb.ObjectId(request.params.id)};
@@ -45,15 +55,6 @@ router.get('/', function(request, response, next) {
      });
    });
 
-// Get a specific Opinion
-  router.get('/solo', function(request, response, next) {
-    const opinion =  {_id: new mongodb.ObjectId(request.query.opinion_id)};
-    db.opinions.findOne(opinion, function(error, opinion){
-      if (error) return next(error);
-      if (!opinion) return next(new Error('Error!'));
-      response.json(opinion);
-    });
-  });
 
 // Post a new opinion (user must be logged in)
 router.post('/', function(request, response, next) {
