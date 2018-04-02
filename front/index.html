@@ -33,13 +33,28 @@
           <div class="card-body">
             <p>${opinion.argument}</p>
             <a href="authorposts?topic=${opinion._id}"><span class="authorbadge badge badge-pill badge-dark">${opinion.author.name}</span></a>
-
-            <button class="like-unlike" hidden>Like</button>
+            <span class="badge badge-pill badge-primary">${opinion.likes.length}</span>
+            <a class="like mx-3" href="#" id="likes">[Like]</a>
             <button class="anon btn btn-primary" hidden>Anonymize</button>
           </div>
         </article>
       `);
+      // Handle opinions likes
+      oArticle.on('click', '#likes', function() {
+        const temp = $(this);
+          $.ajax({method: 'PATCH', url: `/opinions/${opinion._id}/like`})
+            .fail(() => alert('Like Failed!!'))
+            .done(function(opinion) {
+              article.find('.badge-primary').text(opinion.likes.length);
+          });
+      });
 
+      if (!self || self.id === opinion.author.id) {
+        oArticle.find('.like').remove();
+      }
+
+
+      // Handle anonymous clicks
       oArticle.find('.anon').on('click', function() {
         $.ajax({method: 'PATCH', url: `/opinions/${opinion._id}`})
         .fail(() => alert('Could not anonymize'))
@@ -64,9 +79,11 @@
     /////////////////////////////////////////////////////////////////////////// Divider between "how it looks" and "how it works"
 
     // Make a few changes to the page if the user is logged in
+    let self = null;
     $.ajax({method: 'GET', url: '/user'})
       .done(function(user) {
         if (user) {
+          self = user;
           $('#log').attr('href', '/logout').text('Log out');
           $('#new :input').prop('disabled', false);
         }

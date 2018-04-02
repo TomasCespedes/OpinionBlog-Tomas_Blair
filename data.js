@@ -24,12 +24,14 @@ const pie = db.opinions.insertOne({
   author: {id: '114095023332102109087', name: 'Lisa Torrey'},
   claim: "Pie is better than cake.",
   argument: "Posers can bake a passable cake from a box. Posers can't bake a passable pie. Pie is the no-posers-allowed zone of desserts. Pie keeps it real.",
+  likes: []
 });
 
 const will = db.opinions.insertOne({
   author: {id: '112346505532165654868', name: 'Ed Harcourt'},
   claim: "Free will is an illusion.",
   argument: "The atoms in our bodies behave according to the laws of physics. If we had a sufficiently powerful supercomputer, it could simulate the future behavior of the atoms that make up our bodies, therefore predicting our every future move.",
+  likes: []
 });
 
 db.comments.insertMany([

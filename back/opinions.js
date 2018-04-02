@@ -38,7 +38,7 @@ router.post('/', function(request, response, next) {
     author: request.user,
     claim: request.body.claim,
     argument: request.body.argument,
-    likes_count: Number,
+    likes: [],
   };
 
   db.opinions.insertOne(opinion, function(error) {
@@ -59,6 +59,20 @@ router.patch('/:id', function(request, response, next) {
     if (error) return next(error);
     if (!report.matchedCount) return next(new Error('Not found'));
     response.end();
+  });
+});
+
+// like route
+router.patch('/:id/like', function(request, response, next){
+  const opinion = {_id: new mongodb.ObjectId(request.params.id)};
+  const insertedLike = {
+    $addToSet: {
+      likes: request.user
+    }
+  }
+  db.opinions.updateOne(opinion, insertedLike, function(error, report) {
+    if (report.matchedCount === 0) return next(new Error('Cannot like again'));
+    response.send(opinion);
   });
 });
 
