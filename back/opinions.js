@@ -98,7 +98,7 @@ router.patch('/:id/like', function(request, response, next){
   }
   db.opinions.updateOne(opinion, insertedLike, function(error, report) {
     if (report.matchedCount === 0) return next(new Error('Cannot like again'));
-    response.send(opinion);
+    response.end();
   });
 });
 

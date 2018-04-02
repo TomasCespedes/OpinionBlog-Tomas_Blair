@@ -24,7 +24,6 @@
 
     // Generate an article for an opinion
     const opinionArticle = function(opinion) {
-
       const oArticle = $(`
         <article class="card my-3">
           <div class="card-header">
@@ -44,8 +43,8 @@
         const temp = $(this);
           $.ajax({method: 'PATCH', url: `/opinions/${opinion._id}/like`})
             .fail(() => alert('Like Failed!!'))
-            .done(function(opinion) {
-              oArticle.find('.badge-primary').text(opinion.likes.length);
+            .done(function() {
+              oArticle.find('.badge-primary').text(opinion.likes.length + 1);
           });
       });
 
