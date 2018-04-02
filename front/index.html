@@ -45,7 +45,7 @@
           $.ajax({method: 'PATCH', url: `/opinions/${opinion._id}/like`})
             .fail(() => alert('Like Failed!!'))
             .done(function(opinion) {
-              article.find('.badge-primary').text(opinion.likes.length);
+              oArticle.find('.badge-primary').text(opinion.likes.length);
           });
       });
 
