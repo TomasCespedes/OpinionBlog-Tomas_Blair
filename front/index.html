@@ -48,26 +48,28 @@
           });
       });
 
-      if (!self || self.id === opinion.author.id) {
-        oArticle.find('.like').remove();
+      if (!self || self.id === opinion.author.id) { // Timing issue: need to make sure self is determined before doing this
+        oArticle.find('.like').remove(); // Would also be nice to remove it if the user already liked this
       }
 
       // Handle anonymous clicks
       oArticle.find('.anon').on('click', function() {
+        // Since this is permanent, like deletion, would be nice to confirm that the user really meant to do it
         $.ajax({method: 'PATCH', url: `/opinions/${opinion._id}`})
         .fail(() => alert('Could not anonymize'))
         .done(function() {
           oArticle.find('.authorbadge').text('Anonymous');
+          oArticle.find('.anon').remove(); // Might as well get rid of the button now
         });
       });
 
-      $.ajax({method: 'GET', url: '/user'})
+      $.ajax({method: 'GET', url: '/user'}) // If you do the timing fix below you won't need this extra request
         .done(function(user) {
           if (user && user.id == opinion.author.id) {
             oArticle.find('.anon').prop('hidden', false);
           }
           if (user && user.id != opinion.author.id) {
-            oArticle.find('.like-unlike').prop('hidden', false);
+            oArticle.find('.like-unlike').prop('hidden', false); // Looks like this isn't applicable any more
           }
         });
 
@@ -88,7 +90,7 @@
       });
 
     // Load all opinions from the database
-    $.ajax({method: 'GET', url: '/opinions'})
+    $.ajax({method: 'GET', url: '/opinions'}) // Move this up inside the done callback above to fix the timing issue
       .fail(() => $('#opinions .loading').text('Could not load opinions!'))
       .done(function(opinions) {
         $('#opinions .loading').remove();

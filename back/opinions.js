@@ -21,7 +21,7 @@ router.get('/', function(request, response, next) {
 
 
 // Get a specific opinion
-  router.get('/:id/:name', function(request, response, next){
+  router.get('/:id/:name', function(request, response, next){ // REST convention: combine this with the get('/')
     const opinion = {
       "author": {
         "id": request.params.id,
@@ -35,7 +35,7 @@ router.get('/', function(request, response, next) {
   });
 
   // Get a specific Opinion
-    router.get('/solo', function(request, response, next) {
+    router.get('/solo', function(request, response, next) { // This looks like a duplicate of the one below
       const opinion =  {_id: new mongodb.ObjectId(request.query.opinion_id)};
       db.opinions.findOne(opinion, function(error, opinion){
         if (error) return next(error);
@@ -74,7 +74,12 @@ router.post('/', function(request, response, next) {
 });
 
 router.patch('/:id', function(request, response, next) {
-  const opinion = {_id: new mongodb.ObjectId(request.params.id)};
+  if (!request.user) return next(new Error('Forbidden')); // Access control: user must be logged in
+
+  const opinion = {
+    author: request.user, // Access control: user must be the opinion author
+    _id: new mongodb.ObjectId(request.params.id)
+  };
   const newOpinion = {
     $set: {
       author: {id: 'Anonymous', name: 'Anonymous'}
@@ -89,15 +94,20 @@ router.patch('/:id', function(request, response, next) {
 });
 
 // like route
-router.patch('/:id/like', function(request, response, next){
-  const opinion = {_id: new mongodb.ObjectId(request.params.id)};
+router.patch('/:id/like', function(request, response, next){ // REST convention: combine with the patch('/:id')
+  if (!request.user) return next(new Error('Forbidden')); // Access control: user must be logged in
+
+  const opinion = {
+    author: {$ne: request.user}, // Access control: user can't be the opinion author
+    _id: new mongodb.ObjectId(request.params.id)
+  };
   const insertedLike = {
     $addToSet: {
       likes: request.user
     }
   }
   db.opinions.updateOne(opinion, insertedLike, function(error, report) {
-    if (report.matchedCount === 0) return next(new Error('Cannot like again'));
+    if (report.modifiedCount === 0) return next(new Error('Cannot like again')); // It was matching but not modifying
     response.end();
   });
 });

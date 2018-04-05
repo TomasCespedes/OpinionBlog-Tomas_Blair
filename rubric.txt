@@ -1,0 +1,26 @@
+4/4 Opinions can be anonymized
+1/2 Only the author of an opinion can anonymize it
+    - Addressed on the front end but not on the back end
+
+4/5 Clicking any author badge shows all opinions written by that author
+    - Working on the home page but not on the discussion page
+1/1 It would be possible to email a link to an author view
+1/1 There is a link back to all opinions from the author view
+0/1 The database can retrieve opinions by author efficiently
+    - Need an index on opinion.author
+
+4/6 Users can agree and unagree with opinions
+    - There is no way to undo an agreement
+1/2 Users cannot agree with the same opinion multiple times
+    - Addressed on the back end but buggy on the front end
+1/2 Authors cannot agree with their own opinions
+    - Addressed on the front end but not on the back end
+1/1 Agreement counts show on the home page
+
+0/2 REST conventions
+    - Retrieval of a subset of opinions should be a GET request to /opinions?option=value
+    - A change to one opinion should be a PATCH request to opinions/:id
+
+3/3 Reasonable teamwork
+
+Late penalty: two days (20%)
